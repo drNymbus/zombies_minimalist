@@ -1,5 +1,6 @@
 package model.item;
 
+import model.drawable.*;
 import model.util.*;
 import game.*;
 
@@ -8,7 +9,10 @@ import java.util.ArrayList;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-public class Human extends Sprite {
+/*
+ * Playable character (extends Sprite)
+ */
+public class Human extends Movable {
     private int id;
 
     private int lvl;
@@ -16,7 +20,6 @@ public class Human extends Sprite {
     private int actualXP;
     private int lp;
     private int actualLP;
-    private int spd;
 
     private ArrayList<Weapon> weapons;
     private int actual_weapon;
@@ -27,7 +30,7 @@ public class Human extends Sprite {
     private int dx, dy;
 
     public Human(int id, Pane layer, Color c, int x, int y, int lp, int spd, ArrayList<WeaponType> weapons) {
-        super(layer, c, x, y, Settings.SIZE_HUMAN, Settings.SIZE_HUMAN);
+        super(layer, c, x, y, Settings.SIZE_HUMAN, Settings.SIZE_HUMAN, spd);
         this.id = id;
 
         this.lvl = 0; this.levelUp();
@@ -36,7 +39,6 @@ public class Human extends Sprite {
 
         this.lp = lp;
         this.actualLP = this.lp;
-        this.spd = spd;
 
         this.actual_weapon = 0;
         this.weapons = new ArrayList<Weapon>();
@@ -56,17 +58,21 @@ public class Human extends Sprite {
     public int directionY() { return this.dy; }
     public void changeDirection(int x, int y) { this.dx = x; this.dy = y; }
 
-    public void move() {
-        this.setX(this.getX() + this.dx * this.spd);
-        this.setY(this.getY() + this.dy * this.spd);
+    public void moveHuman() {
+        this.move();
         Weapon w = this.weapons.get(this.actual_weapon);
-        w.setX(this.getX());
-        w.setY(this.getY() - this.getHeight()/2);
+        // w.setX(w.getX() + this.dx * this.spd);
+        // w.setY(w.getY() + this.dy * this.spd);
+        // w.setX(this.getX());
+        // w.setY(this.getY() - this.getHeight()/2);
     }
 
     public void rotateHuman(int angle) {
         this.setRotate(angle);
-        this.weapons.get(this.actual_weapon).rotate(angle, this.getX(), this.getY());
+        this.weapons.get(this.actual_weapon).rotate(this.getAngle(), this.getX(), this.getY());
+        // Weapon w = this.weapons.get(this.actual_weapon);
+        // w.rotate(this.getAngle(), this.getX(), this.getY());
+        // w.setRotate(this.getAngle());
     }
 
     public void kill(ZombieType zombie) {
@@ -87,7 +93,7 @@ public class Human extends Sprite {
         this.actualLP += this.lp/33;
         if (this.actualLP > this.lp) this.actualLP = this.lp;
 
-        this.spd++;
+        this.setSpeed(this.getSpeed() + 1);
     }
 
     public void heal(int n) {

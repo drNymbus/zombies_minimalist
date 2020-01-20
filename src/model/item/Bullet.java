@@ -2,7 +2,11 @@ package model.item;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import model.drawable.Sprite;
 
+/*
+ * Bullet class
+ */
 public class Bullet extends Sprite {
     private int owner;
     private int dmg;

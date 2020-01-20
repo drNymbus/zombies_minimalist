@@ -1,10 +1,14 @@
 package model.item;
 
+import model.drawable.Sprite;
 import model.util.*;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+/*
+ * Weapon item (extends Sprite) 
+ */
 public class Weapon extends Sprite {
     private int id;
     private int weapon_id;

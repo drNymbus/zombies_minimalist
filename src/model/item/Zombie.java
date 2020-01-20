@@ -1,10 +1,16 @@
 package model.item;
 
+import model.drawable.Sprite;
 import model.util.*;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+
+/*
+ * Ennemy character (Zombies)
+ * Some methods are the same as Human class
+ */
 public class Zombie extends Sprite {
     private int id;
     private int lp;

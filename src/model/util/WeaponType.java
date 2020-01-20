@@ -2,6 +2,9 @@ package model.util;
 
 import javafx.scene.paint.Color;
 
+/*
+ * Enum to init Weapon class
+ */
 public enum WeaponType {
     // WEAPON_NAME (id, name, dmg, fire_rate, reload_time, velocity, range, magazine, color, width, height)
     // FISTS (2, "FISTS", 5, 20, 1, -1, )

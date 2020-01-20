@@ -1,6 +1,7 @@
 package model.item;
 
 import game.*;
+import model.drawable.Sprite;
 import model.util.*;
 
 import java.util.ArrayList;
@@ -67,33 +68,35 @@ public class Map {
         }
 
         Human h = this.humans[this.player_id];
+
+        int dx = 0, dy = 0;
         if (in.isUP()) {
-            h.changeDirection(h.directionX(), -1);
+            dy = -1;
         } else if (in.isDOWN()) {
-            h.changeDirection(h.directionX(), 1);
-        } else {
-            h.changeDirection(h.directionX(), 0);
+            dy = 1;
         }
 
         if (in.isLEFT()) {
-            h.changeDirection(-1, h.directionY());
+            dx = -1;
         } else if (in.isRIGHT()) {
-            h.changeDirection(1, h.directionY());
-        } else {
-            h.changeDirection(0, h.directionY());
+            dx = 1;
         }
+        h.changeDirection(dx, dy);
+        System.out.println(h.directionX() + "," + h.directionY());
+
 
         int angle = h.computeAngle(in.getMouseX(), in.getMouseY());
-        System.out.println("x: " + (in.getMouseX() - h.getX()));
-        System.out.println("y: " + (in.getMouseY() - h.getY()));
-        System.out.println("angle: " + h.getAngle());
         h.rotateHuman(angle);
 
     }
 
     public void update() {
         for (Human h : this.humans) {
-            h.move();
+            if (h != null) {
+                h.moveHuman();
+                // h.rotateHuman(h.getAngle() + 1);
+                // System.out.println(h.getAngle());
+            }
         }
     }
 

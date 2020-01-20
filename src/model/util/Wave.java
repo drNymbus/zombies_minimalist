@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 import javafx.scene.layout.Pane;
 
+/*
+ * Wave class, handles Zombie spawns and diffculty
+ */
 public class Wave {
     private int wave_nb;
     private int difficulty;

@@ -4,6 +4,9 @@ import game.*;
 
 import javafx.scene.paint.Color;
 
+/*
+ * Enum to init Zombie class
+ */
 public enum ZombieType {
     // ZombieType (name, lp, dmg, fire_rate, spd, xp, color, width, height)
     ZOMBIE_EZ ("RUNNER", 100, 5, 50, 3, 0, Settings.COLOR_ZOMBIE, Settings.SIZE_ZOMBIE, Settings.SIZE_ZOMBIE),
