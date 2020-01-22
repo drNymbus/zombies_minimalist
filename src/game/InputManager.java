@@ -91,6 +91,7 @@ public class InputManager {
 
 	public boolean isFire() { return is(Settings.FIRE_PRIMARY); }
 	public boolean isFireSecond() { return is(Settings.FIRE_SECONDARY); }
+	public boolean isReload() { return is(Settings.RELOAD); }
 
 	public boolean isUP() { return is(Settings.UP); }
 	public boolean isDOWN() { return is(Settings.DOWN); }

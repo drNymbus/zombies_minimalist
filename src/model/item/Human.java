@@ -1,6 +1,6 @@
 package model.item;
 
-import model.drawable.*;
+import model.draw.Movable;
 import model.util.*;
 import game.*;
 
@@ -27,9 +27,7 @@ public class Human extends Movable {
     private Weapon secondary;
     private int[] grenades;
 
-    private int dx, dy;
-
-    public Human(int id, Pane layer, Color c, int x, int y, int lp, int spd, ArrayList<WeaponType> weapons) {
+    public Human(int id, Pane layer, Color c, double x, double y, int lp, double spd, ArrayList<WeaponType> weapons) {
         super(layer, c, x, y, Settings.SIZE_HUMAN, Settings.SIZE_HUMAN, spd);
         this.id = id;
 
@@ -45,31 +43,28 @@ public class Human extends Movable {
 
         for (int i=0; i < weapons.size(); i++) {
             WeaponType wt = weapons.get(i);
-            Weapon w = new Weapon(this.getLayer(), this.getX(), this.getY() - this.getHeight()/2, i, this.id, wt);
+            Weapon w = new Weapon(this.getLayer(), this.getX(), this.getY(), i, this.id, wt);
             this.weapons.add(w);
         }
 
         this.grenades = new int[4];
-
-        this.dx = 0; this.dy = 0;
     }
 
-    public int directionX() { return this.dx; }
-    public int directionY() { return this.dy; }
-    public void changeDirection(int x, int y) { this.dx = x; this.dy = y; }
+    public Weapon getWeapon() { return this.weapons.get(this.actual_weapon); }
 
     public void moveHuman() {
         this.move();
         Weapon w = this.weapons.get(this.actual_weapon);
-        // w.setX(w.getX() + this.dx * this.spd);
-        // w.setY(w.getY() + this.dy * this.spd);
+        w.setX(w.getX() + this.directionX() * this.getSpeed());
+        w.setY(w.getY() + this.directionY() * this.getSpeed());
         // w.setX(this.getX());
         // w.setY(this.getY() - this.getHeight()/2);
     }
 
-    public void rotateHuman(int angle) {
+    public void rotateHuman(double angle) {
         this.setRotate(angle);
-        this.weapons.get(this.actual_weapon).rotate(this.getAngle(), this.getX(), this.getY());
+        Weapon w = this.weapons.get(this.actual_weapon);
+        w.rotate(this.getAngle(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
         // Weapon w = this.weapons.get(this.actual_weapon);
         // w.rotate(this.getAngle(), this.getX(), this.getY());
         // w.setRotate(this.getAngle());
@@ -102,8 +97,5 @@ public class Human extends Movable {
     }
 
     public boolean isAlive() { return (this.actualLP > 0); }
-
-    public Bullet fire() { return this.weapons.get(this.actual_weapon).fire(); }
-    public void reload() { this.weapons.get(this.actual_weapon).reload(); }
 
 }

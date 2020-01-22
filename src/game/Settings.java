@@ -5,6 +5,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 
 public class Settings {
+    public static final String PROJECT_NAME = "Zomb!es";
     public static final int SCENE_WIDTH = 800;
     public static final int SCENE_HEIGHT = 800;
 

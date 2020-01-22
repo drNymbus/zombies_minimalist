@@ -1,7 +1,7 @@
 package model.item;
 
 import game.*;
-import model.drawable.Sprite;
+import model.draw.*;
 import model.util.*;
 
 import java.util.ArrayList;
@@ -16,6 +16,8 @@ public class Map {
     private String filename;
     private String state;
 
+    private int width, height;
+
     private Sprite[][] background;
     private ArrayList<Bullet> bullets;
 
@@ -27,17 +29,20 @@ public class Map {
     private Human[] humans; // Human player => humans[player_id]
 
     // loading on a default map (hardcoded)
-    public Map(Sprite[][] bg, Human[] players, int difficulty) {
+    public Map(Sprite[][] bg, Human[] players, int id, int difficulty) {
         this.pause = false;
         this.filename = "NONE";
         this.state = "NONE";
 
         this.background = bg;
-        this.humans = players;
-        this.difficulty = difficulty;
+        this.bullets = new ArrayList<Bullet>();
 
+        this.difficulty = difficulty;
         this.wave_nb = 0;
         this.wave = new Wave(this.difficulty);
+
+        this.player_id = id;
+        this.humans = players;
     }
 
     // load map from file (TBD)
@@ -59,14 +64,6 @@ public class Map {
             System.out.println(this.pause);
         }
 
-        if (in.isFire()) {
-            // Human h = this.humans[this.player_id];
-            // h.fire()
-            System.out.println("FIRE (primary)");
-        } else if (in.isFireSecond()) {
-            System.out.println("FIRE (secondary)");
-        }
-
         Human h = this.humans[this.player_id];
 
         int dx = 0, dy = 0;
@@ -82,21 +79,46 @@ public class Map {
             dx = 1;
         }
         h.changeDirection(dx, dy);
-        System.out.println(h.directionX() + "," + h.directionY());
+        // System.out.println(h.directionX() + "," + h.directionY() + " | " + h.getX() + "," + h.getY());
 
-
-        int angle = h.computeAngle(in.getMouseX(), in.getMouseY());
+        double angle = h.computeAngle(in.getMouseX(), in.getMouseY());
         h.rotateHuman(angle);
+
+        if (in.isFire()) {
+            Bullet b = h.getWeapon().fire();
+            if (b != null) {
+                double bdx = Math.cos(Math.toRadians(angle));
+                double bdy = Math.sin(Math.toRadians(angle));
+                b.changeDirection(bdx, bdy);
+                this.bullets.add(b);
+            }
+        } else if (in.isFireSecond()) {
+            System.out.println("FIRE (secondary)");
+        } else if (in.isReload()) {
+            h.getWeapon().reload();
+        }
 
     }
 
     public void update() {
         for (Human h : this.humans) {
             if (h != null) {
+                // h.move();
+                // System.out.println(h.directionX() + "," + h.directionY() + " | " + h.getX() + "," + h.getY());
                 h.moveHuman();
+                h.getWeapon().update();
+                // System.out.println(h.getPosition().toString());
                 // h.rotateHuman(h.getAngle() + 1);
                 // System.out.println(h.getAngle());
             }
+        }
+
+        for (int i=0; i < this.bullets.size(); i++) {
+            Bullet b = this.bullets.get(i);
+            b.move();
+            System.out.println(b.directionX() + "," + b.directionY());
+            Position pos = b.getPosition();
+            if ((pos.getX() < 0 || pos.getX() > this.width) && (pos.getY() < 0 || pos.getY() > this.height)) this.bullets.remove(i);
         }
     }
 

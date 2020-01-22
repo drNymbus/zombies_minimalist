@@ -47,7 +47,7 @@ public class Game extends Application {
 		stage.setScene(scene);
 		stage.setResizable(true);
 		stage.show();
-		stage.setTitle("Zomb!es");
+		stage.setTitle(Settings.PROJECT_NAME);
 		layer = new Pane();
 		root.getChildren().add(layer);
 		loadGame();
@@ -55,13 +55,15 @@ public class Game extends Application {
 		gameLoop = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if (map.isOver()) {
-					// System.out.println("Over.");
-				} else {
-					// System.out.println("not Over.");
-					map.processInput(input, now);
-					map.update();
-				}
+				// if (map.isOver()) {
+				// 	// System.out.println("Over.");
+				// } else {
+				// 	// System.out.println("not Over.");
+				// 	map.processInput(input, now);
+				// 	map.update();
+				// }
+				map.processInput(input, now);
+				map.update();
 
 			}
 		};
@@ -94,7 +96,7 @@ public class Game extends Application {
 		// players[2] = new Human(Settings.ID_HUMAN2, layer, Settings.COLOR_HUMAN2, 100, 200, 100, 1, wp);
 		// players[3] = new Human(Settings.ID_HUMAN3, layer, Settings.COLOR_HUMAN3, 200, 200, 100, 1, wp);
 
-		this.map = new Map(null, players, 0);
+		this.map = new Map(null, players, Settings.ID_HUMAN0, 0);
     }
 
 	public static void main(String[] args) {

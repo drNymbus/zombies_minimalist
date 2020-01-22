@@ -1,13 +1,13 @@
 package model.item;
 
-import model.drawable.Sprite;
+import model.draw.*;
 import model.util.*;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /*
- * Weapon item (extends Sprite) 
+ * Weapon item (extends Sprite)
  */
 public class Weapon extends Sprite {
     private int id;
@@ -36,7 +36,7 @@ public class Weapon extends Sprite {
 
     private Bullet blueprint;
 
-    public Weapon(Pane layer, int x, int y, int id, int owner, WeaponType weapon) {
+    public Weapon(Pane layer, double x, double y, int id, int owner, WeaponType weapon) {
         super(layer, weapon.getColor(), x, y, weapon.getWidth(), weapon.getHeight());
         this.id = id;
         this.owner = owner;
@@ -47,7 +47,7 @@ public class Weapon extends Sprite {
         this.weapon_id = weapon.getId();
         this.name = weapon.getName();
 
-        this.state = "READY";
+        this.state = "SHOOT";
         this.dmg = weapon.getDamage();
 
         this.fire_rate = weapon.getFireRate();
@@ -59,7 +59,7 @@ public class Weapon extends Sprite {
         this.magazine = weapon.getMagazine();
         this.actual_mag = this.magazine;
 
-        this.blueprint = new Bullet(layer, Color.YELLOW, x, y - weapon.getHeight()/2, weapon.getWidth(), weapon.getHeight(),
+        this.blueprint = new Bullet(layer, Color.YELLOW, x, y, weapon.getWidth(), weapon.getHeight(),
                                     owner, weapon.getDamage(), weapon.getVelocity(), weapon.getRange());
         this.blueprint.removeFromLayer();
     }
@@ -91,11 +91,17 @@ public class Weapon extends Sprite {
     }
 
     public void update() {
+        // System.out.println(this.state);
+
+        this.blueprint.setX(this.getX());
+        this.blueprint.setY(this.getY());
+        this.blueprint.setRotate(this.getAngle());
+
         if (this.state == "RELOAD") {
             if (this.actual_rt > 0) {
                 this.actual_rt--;
             } else {
-                this.state = "READY";
+                this.state = "SHOOT";
 
                 while (this.actual_ammo > 0 && this.actual_mag < this.magazine) {
                     this.actual_ammo--;

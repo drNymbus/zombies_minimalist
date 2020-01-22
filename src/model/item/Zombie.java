@@ -1,6 +1,6 @@
 package model.item;
 
-import model.drawable.Sprite;
+import model.draw.Sprite;
 import model.util.*;
 
 import javafx.scene.layout.Pane;

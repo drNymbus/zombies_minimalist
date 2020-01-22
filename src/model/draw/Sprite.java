@@ -1,4 +1,4 @@
-package model.drawable;
+package model.draw;
 
 import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Pane;
@@ -6,14 +6,14 @@ import javafx.scene.paint.Color;
 
 public class Sprite {
 	private Pane layer;
-	private int x, y;
+	private Position pos;
 	private int width, height;
 	private Rectangle base;
-	private int angle;
+	private double angle;
 	private Color color;
 
-	public Sprite(Pane layer, Color c, int x, int y, int w, int h) {
-		this.x = x; this.y = x;
+	public Sprite(Pane layer, Color c, double x, double y, int w, int h) {
+		this.pos = new Position(x, y);
 		this.width = w; this.height = h;
 
 		this.base = new Rectangle(x - w/2, y - h/2, w, h);
@@ -25,11 +25,11 @@ public class Sprite {
 		this.addToLayer();
 	}
 
-	public int getX() { return this.x; }
-	public void setX(int x) { this.x = x; this.base.setX(x-this.width/2); }
-
-	public int getY() { return this.y; }
-	public void setY(int y) { this.y = y; this.base.setY(y-this.height/2); }
+	public void setX(double x) { this.pos.setX(x); this.base.setX( x - this.width/2 ); }
+	public void setY(double y) { this.pos.setY(y); this.base.setY( y - this.height/2 ); }
+	public Position getPosition() { return this.pos; }
+	public double getX() { return this.pos.getX(); }
+	public double getY() { return this.pos.getY(); }
 
 	public Color getColor() { return this.color; }
 	public void setColor(Color c) { this.color = c; this.base.setFill(c); }
@@ -43,9 +43,9 @@ public class Sprite {
 	public void removeFromLayer() { this.layer.getChildren().remove(this.base); }
 
 	public boolean isIn(Sprite s) {
-		if (s.getX() - s.getWidth()/2 > base.getX() + this.width || s.getX() + s.getWidth()/2 < base.getX())
+		if (s.getX() - s.getWidth()/2 > this.base.getX() + this.width || s.getX() + s.getWidth()/2 < this.base.getX())
 			return false;
-		if (s.getY() - s.getHeight()/2 > base.getY() + this.height || s.getY() + s.getHeight()/2 < base.getY())
+		if (s.getY() - s.getHeight()/2 > this.base.getY() + this.height || s.getY() + s.getHeight()/2 < this.base.getY())
 			return false;
 		return true;
 	}
@@ -54,7 +54,7 @@ public class Sprite {
 	* @brief : applies a rotation from the base center
 	* @param angle : [0-360) in degrees
 	*/
-	public void setRotate(int angle) {
+	public void setRotate(double angle) {
 		this.angle = angle; this.base.setRotate(angle);
 	}
 
@@ -63,23 +63,21 @@ public class Sprite {
 	* @param angle : [0-360) in degrees
 	* @param x : the x coord of the pivot
 	* @param y : the x coord of the pivot
+	* @param w : width of the ellipse
+	* @param w : height of the ellipse
 	*/
-	public void rotate(int angle, int x, int y) {
+	public void rotate(double angle, double x, double y, int w, int h) {
 		this.setRotate(angle);
-		this.setX(x + ((int) Math.cos(angle)));
-		this.setY(y + ((int) Math.sin(angle)));
-		// Rotate rotate = new Rotate();
-		// rotate.setPivotX(x);
-		// rotate.setPivotY(y);
-		// rotate.setAngle(angle - this.angle); // rotate from new angel to old angle
-		// this.base.getTransforms().addAll(rotate);
-		// this.angle = angle;
+
+		double angle_rad = Math.toRadians(angle);
+		this.setX(x + Math.cos(angle_rad) * w/2);
+		this.setY(y + Math.sin(angle_rad) * h/2);
 	}
-	public void rotate(int angle) { this.rotate(angle, this.x, this.y); }
+	public void rotate(double angle) { this.rotate(angle, this.pos.getX(), this.pos.getY(), this.width, this.height); }
 
-	public int getAngle() { return this.angle; }
+	public double getAngle() { return this.angle; }
 
-	public int computeAngle(int x, int y) {
+	public double computeAngle(double x, double y) {
 		// double dot = (this.getX() * x) + (this.getY() * y);
 		// double det = (this.getX() * y) - (this.getY() * x);
 		// double angle = Math.atan2(det, dot);
@@ -94,7 +92,7 @@ public class Sprite {
 		// double angle = Math.toDegrees(Math.atan2(x - this.getX(), y - this.getY()));
 		// if (angle < 0) angle += 360;
 		// return (int) angle;
-		double theta = Math.atan2(y - this.getY(), x - this.getX());
+		double theta = Math.atan2(y - this.pos.getY(), x - this.pos.getX());
 
 		// rotate the theta angle clockwise by 90 degrees (this makes 0 point NORTH)
 		// NOTE: adding to an angle rotates it clockwise.
@@ -111,27 +109,28 @@ public class Sprite {
 		// greater than one partial rotation
 		if (angle < 0) angle += 360;
 
-		return (int) angle;
+		return angle;
 	}
 
 
-	public boolean isIn(int sx, int sy, int ssize) {
-		if (sx - ssize/2 > base.getX() + this.width || sx + ssize/2 < base.getX())
+	public boolean isIn(double sx, double sy, int ssize) {
+		if (sx - ssize/2 > this.base.getX() + this.width || sx + ssize/2 < this.base.getX())
 			return false;
-		if (sy - ssize/2 > base.getY() + this.height || sy + ssize/2 < base.getY())
+		if (sy - ssize/2 > this.base.getY() + this.height || sy + ssize/2 < this.base.getY())
 			return false;
 		return true;
 	}
 
 	public double distance(Sprite s) {
-		double tmpX = Math.pow((s.getX() - this.getX()), 2);
-		double tmpY = Math.pow((s.getY() - this.getY()), 2);
+		Position s_pos = s.getPosition();
+		double tmpX = Math.pow((s_pos.getX() - this.pos.getX()), 2);
+		double tmpY = Math.pow((s_pos.getY() - this.pos.getY()), 2);
 		return Math.sqrt(tmpX + tmpY);
 	}
 
-	public double distance(int x, int y) {
-		double tmpX = Math.pow((x - this.getX()), 2);
-		double tmpY = Math.pow((y - this.getY()), 2);
+	public double distance(double x, double y) {
+		double tmpX = Math.pow((x - this.pos.getX()), 2);
+		double tmpY = Math.pow((y - this.pos.getY()), 2);
 		return Math.sqrt(tmpX + tmpY);
 	}
 

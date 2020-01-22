@@ -17,14 +17,14 @@ public enum WeaponType {
     private int dmg;
     private int fire_rate;
     private int reload_time;
-    private int velocity;
+    private double velocity;
     private int range;
     private int magazine;
 
     private Color color;
     private int width, height;
 
-    WeaponType(int id, String name, int dmg, int fire_rate, int reload_time, int vel, int range, int mag, Color c, int w, int h) {
+    WeaponType(int id, String name, int dmg, int fire_rate, int reload_time, double vel, int range, int mag, Color c, int w, int h) {
         this.id = id; this.name = name;
         this.dmg = dmg; this.magazine = mag;
         this.fire_rate = fire_rate; this.reload_time = reload_time;
@@ -39,7 +39,7 @@ public enum WeaponType {
 
     public int getFireRate() { return this.fire_rate; }
     public int getReloadTime() { return this.reload_time; }
-    public int getVelocity() { return this.velocity; }
+    public double getVelocity() { return this.velocity; }
     public int getRange() { return this.range; }
 
     public Color getColor() { return this.color; }
