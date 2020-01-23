@@ -59,10 +59,15 @@ public class Weapon extends Sprite {
         this.magazine = weapon.getMagazine();
         this.actual_mag = this.magazine;
 
-        this.blueprint = new Bullet(layer, Color.YELLOW, x, y, weapon.getWidth(), weapon.getHeight(),
+        this.blueprint = new Bullet(layer, weapon.getBulletColor(), x, y, weapon.getBulletWidth(), weapon.getBulletHeight(),
                                     owner, weapon.getDamage(), weapon.getVelocity(), weapon.getRange());
         this.blueprint.removeFromLayer();
     }
+
+    public int getMag() { return this.actual_mag; }
+    public int getMaxMag() { return this.magazine; }
+
+    public int getAmmo() { return this.actual_ammo; }
 
     public Bullet fire() {
         Bullet b = null;
@@ -74,6 +79,7 @@ public class Weapon extends Sprite {
                 b = new Bullet(this.blueprint);
             } else {
                 this.state = "RELOAD";
+                this.actual_rt = this.reload_time;
             }
         } else if (this.state == "FIRE_RATE") {
             if (this.actual_fr >= 100) {
@@ -91,8 +97,6 @@ public class Weapon extends Sprite {
     }
 
     public void update() {
-        // System.out.println(this.state);
-
         this.blueprint.setX(this.getX());
         this.blueprint.setY(this.getY());
         this.blueprint.setRotate(this.getAngle());

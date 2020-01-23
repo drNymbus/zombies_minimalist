@@ -6,8 +6,8 @@ import javafx.scene.input.MouseButton;
 
 public class Settings {
     public static final String PROJECT_NAME = "Zomb!es";
-    public static final int SCENE_WIDTH = 800;
-    public static final int SCENE_HEIGHT = 800;
+    public static final int SCENE_WIDTH = 1920;
+    public static final int SCENE_HEIGHT = 1000;
 
     public static final int SIZE_HUMAN = 20;
     public static final int SIZE_ZOMBIE = 20;
@@ -25,7 +25,8 @@ public class Settings {
     public static final Color COLOR_HUMAN3 = Color.DARKBLUE;
     public static final Color COLOR_ZOMBIE = Color.RED;
 
-    public static final Color COLOR_DIRT = Color.BROWN;
+    public static final Color COLOR_PROP = Color.BLACK;
+    public static final Color COLOR_DIRT = Color.SIENNA;
     public static final Color COLOR_GRASS = Color.GREEN;
     public static final Color COLOR_CEMENT = Color.LIGHTGREY;
 

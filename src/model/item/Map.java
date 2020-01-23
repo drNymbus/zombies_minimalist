@@ -2,23 +2,23 @@ package model.item;
 
 import game.*;
 import model.draw.*;
-import model.util.*;
 
 import java.util.ArrayList;
 
 import javafx.application.Platform;
-import javafx.scene.layout.Pane;
+import javafx.scene.Group;
 
 
 public class Map {
-    private Pane layer;
+    private Group root;
     private boolean pause;
     private String filename;
     private String state;
 
     private int width, height;
 
-    private Sprite[][] background;
+    private Sprite[] background;
+    private Prop[] props;
     private ArrayList<Bullet> bullets;
 
     private int difficulty;
@@ -29,12 +29,26 @@ public class Map {
     private Human[] humans; // Human player => humans[player_id]
 
     // loading on a default map (hardcoded)
-    public Map(Sprite[][] bg, Human[] players, int id, int difficulty) {
+    public Map(int w, int h, Sprite[] bg, Prop[] props, Human[] players, int id, int difficulty) {
         this.pause = false;
         this.filename = "NONE";
         this.state = "NONE";
 
+        this.width = w;
+        this.height = h;
+
         this.background = bg;
+        // this.background = new Sprite[bg.length];
+        // for (int i=0; i < bg.length; i++) {
+        //     this.background[i] = bg[i];
+        // }
+
+        this.props = props;
+        // this.props = new Sprite[props.length];
+        // for (int i=0; i < props.length; i++) {
+        //     this.props[i] = props[i];
+        // }
+
         this.bullets = new ArrayList<Bullet>();
 
         this.difficulty = difficulty;
@@ -54,6 +68,8 @@ public class Map {
 
     // TBD
     public void loadMap() {}
+
+    public Human getPlayer() { return this.humans[this.player_id]; }
 
     public void processInput(InputManager in, long now) {
         if (in.isExit()) {
@@ -87,8 +103,11 @@ public class Map {
         if (in.isFire()) {
             Bullet b = h.getWeapon().fire();
             if (b != null) {
-                double bdx = Math.cos(Math.toRadians(angle));
-                double bdy = Math.sin(Math.toRadians(angle));
+                double angle_rad = Math.toRadians(angle);
+        		angle_rad -= Math.PI/2.0;
+                double bdx = Math.cos(angle_rad);
+                double bdy = Math.sin(angle_rad);
+
                 b.changeDirection(bdx, bdy);
                 this.bullets.add(b);
             }
@@ -105,7 +124,31 @@ public class Map {
             if (h != null) {
                 // h.move();
                 // System.out.println(h.directionX() + "," + h.directionY() + " | " + h.getX() + "," + h.getY());
-                h.moveHuman();
+                Position new_pos = h.getNewPos();
+                Sprite tmp = new Sprite(h.getLayer(), h.getColor(), new_pos.getX(), new_pos.getY(), h.getWidth(), h.getHeight());
+                tmp.removeFromLayer();
+
+                boolean move = true;
+                ArrayList<Zombie> zombies = this.wave.getZombies();
+                int max = Math.max(zombies.size(), this.props.length);
+                for (int i=0; i < max; i++) {
+                    if (!move) break;
+
+                    if (i < zombies.size()) {
+                        if (tmp.isIn(zombies.get(i))) move = false;
+                    }
+
+                    if (i < this.props.length) {
+                        if (tmp.isIn(this.props[i])) move = false;
+                    }
+
+                }
+
+                if (move) {
+                    h.move();
+                } else {
+
+                }
                 h.getWeapon().update();
                 // System.out.println(h.getPosition().toString());
                 // h.rotateHuman(h.getAngle() + 1);
@@ -118,7 +161,10 @@ public class Map {
             b.move();
             System.out.println(b.directionX() + "," + b.directionY());
             Position pos = b.getPosition();
-            if ((pos.getX() < 0 || pos.getX() > this.width) && (pos.getY() < 0 || pos.getY() > this.height)) this.bullets.remove(i);
+            if ((pos.getX() < 0 || pos.getX() > this.width) && (pos.getY() < 0 || pos.getY() > this.height)) {
+                b.removeFromLayer();
+                this.bullets.remove(i);
+            }
         }
     }
 

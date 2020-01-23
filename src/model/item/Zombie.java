@@ -1,6 +1,6 @@
 package model.item;
 
-import model.draw.Sprite;
+import model.draw.*;
 import model.util.*;
 
 import javafx.scene.layout.Pane;
@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
  * Ennemy character (Zombies)
  * Some methods are the same as Human class
  */
-public class Zombie extends Sprite {
+public class Zombie extends Movable {
     private int id;
     private int lp;
 
@@ -19,13 +19,10 @@ public class Zombie extends Sprite {
     private int dmg;
     private int fire_rate;
     private int actual_fr;
-    private int spd;
-    private int actual_spd;
+    private int xp;
 
-    private int dx, dy;
-
-    public Zombie(Pane layer, Color c, int x, int y, int id, ZombieType zombie) {
-        super(layer, c, x, y, zombie.getWidth(), zombie.getHeight());
+    public Zombie(Pane layer, double x, double y, int id, ZombieType zombie) {
+        super(layer, zombie.getColor(), x, y, zombie.getWidth(), zombie.getHeight(), zombie.getSpeed());
         this.id = id;
         this.lp = zombie.getLifePoint();
 
@@ -34,7 +31,7 @@ public class Zombie extends Sprite {
         this.fire_rate = zombie.getFireRate();
         this.actual_fr = this.fire_rate;
 
-        this.spd = zombie.getSpeed();
+        this.xp = zombie.getExperience();
     }
 
     public int getDamage() {
@@ -53,25 +50,18 @@ public class Zombie extends Sprite {
         return dmg;
     }
 
-    public int directionX() { return this.dx; }
-    public int directionY() { return this.dy; }
-    public void changeDirection(Human[] humans) {
-        Human target = humans[0];
-        double min = this.distance(target);
-        for (int i=1; i < humans.length; i++) {
-            Human h = humans[i];
-            if (min > this.distance(h)) {
-                target = humans[i];
-                min = this.distance(h);
-            }
-        }
-
-        this.dx = (this.getX() > target.getX()) ? -1 : 1;
-        this.dy = (this.getY() > target.getY()) ? -1 : 1;
-    }
-
-    public void move() {
-        this.setX(this.getX() + this.dx * this.spd);
-        this.setY(this.getY() + this.dy * this.spd);
-    }
+    // public void changeDirection(Human[] humans) {
+    //     Human target = humans[0];
+    //     double min = this.distance(target);
+    //     for (int i=1; i < humans.length; i++) {
+    //         Human h = humans[i];
+    //         if (min > this.distance(h)) {
+    //             target = humans[i];
+    //             min = this.distance(h);
+    //         }
+    //     }
+    //
+    //     this.dx = (this.getX() > target.getX()) ? -1 : 1;
+    //     this.dy = (this.getY() > target.getY()) ? -1 : 1;
+    // }
 }

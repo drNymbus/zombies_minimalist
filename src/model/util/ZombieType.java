@@ -40,6 +40,7 @@ public enum ZombieType {
     public int getFireRate() { return this.fire_rate; }
     public int getSpeed() { return this.spd; }
     public int getExperience() { return this.xp; }
+
     public Color getColor() { return this.color; }
     public int getWidth() { return this.width; }
     public int getHeight() { return this.height; }

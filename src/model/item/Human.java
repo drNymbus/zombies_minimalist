@@ -19,7 +19,7 @@ public class Human extends Movable {
     private int xp;
     private int actualXP;
     private int lp;
-    private int actualLP;
+    private int actual_lp;
 
     private ArrayList<Weapon> weapons;
     private int actual_weapon;
@@ -36,7 +36,7 @@ public class Human extends Movable {
         this.actualXP = 0;
 
         this.lp = lp;
-        this.actualLP = this.lp;
+        this.actual_lp = this.lp;
 
         this.actual_weapon = 0;
         this.weapons = new ArrayList<Weapon>();
@@ -48,7 +48,11 @@ public class Human extends Movable {
         }
 
         this.grenades = new int[4];
+
     }
+
+    public int getMaxLifePoints() { return this.lp; }
+    public int getLifePoints() { return this.actual_lp;}
 
     public Weapon getWeapon() { return this.weapons.get(this.actual_weapon); }
 
@@ -62,12 +66,8 @@ public class Human extends Movable {
     }
 
     public void rotateHuman(double angle) {
-        this.setRotate(angle);
         Weapon w = this.weapons.get(this.actual_weapon);
-        w.rotate(this.getAngle(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        // Weapon w = this.weapons.get(this.actual_weapon);
-        // w.rotate(this.getAngle(), this.getX(), this.getY());
-        // w.setRotate(this.getAngle());
+        w.rotate(angle, this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 
     public void kill(ZombieType zombie) {
@@ -85,17 +85,17 @@ public class Human extends Movable {
         this.actualXP = 0;
 
         this.lp += this.lvl * 10;
-        this.actualLP += this.lp/33;
-        if (this.actualLP > this.lp) this.actualLP = this.lp;
+        this.actual_lp += this.lp/33;
+        if (this.actual_lp > this.lp) this.actual_lp = this.lp;
 
         this.setSpeed(this.getSpeed() + 1);
     }
 
     public void heal(int n) {
-        this.actualLP += n;
-        if (this.actualLP > this.lp) this.actualLP = this.lp;
+        this.actual_lp += n;
+        if (this.actual_lp > this.lp) this.actual_lp = this.lp;
     }
 
-    public boolean isAlive() { return (this.actualLP > 0); }
+    public boolean isAlive() { return (this.actual_lp > 0); }
 
 }

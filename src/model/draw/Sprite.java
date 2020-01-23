@@ -43,10 +43,16 @@ public class Sprite {
 	public void removeFromLayer() { this.layer.getChildren().remove(this.base); }
 
 	public boolean isIn(Sprite s) {
-		if (s.getX() - s.getWidth()/2 > this.base.getX() + this.width || s.getX() + s.getWidth()/2 < this.base.getX())
+		if (this.base.getX() > s.getX() + s.getWidth()/2 || this.base.getX() + this.width + 1 < s.getX() - s.getWidth()/2)
 			return false;
-		if (s.getY() - s.getHeight()/2 > this.base.getY() + this.height || s.getY() + s.getHeight()/2 < this.base.getY())
+		if (this.base.getY() > s.getY() + s.getHeight()/2 || this.base.getY() + this.height + 1 < s.getY() - s.getHeight()/2)
 			return false;
+
+		// if (s.getX() - s.getWidth()/2 > this.base.getX() + this.width || s.getX() + s.getWidth()/2 < this.base.getX())
+		// 	return false;
+		// if (s.getY() - s.getHeight()/2 > this.base.getY() + this.height || s.getY() + s.getHeight()/2 < this.base.getY())
+		// 	return false;
+
 		return true;
 	}
 
@@ -70,6 +76,7 @@ public class Sprite {
 		this.setRotate(angle);
 
 		double angle_rad = Math.toRadians(angle);
+		angle_rad -= Math.PI/2.0;
 		this.setX(x + Math.cos(angle_rad) * w/2);
 		this.setY(y + Math.sin(angle_rad) * h/2);
 	}

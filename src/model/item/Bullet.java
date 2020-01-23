@@ -23,6 +23,7 @@ public class Bullet extends Movable {
 
     public Bullet(Bullet b) {
         super(b.getLayer(), b.getColor(), b.getX(), b.getY(), b.getWidth(), b.getHeight(), b.getSpeed());
+        this.setRotate(b.getAngle());
         this.owner = b.getOwner();
         this.dmg = b.getDamage();
         this.range = b.getRange();
