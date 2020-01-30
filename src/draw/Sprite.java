@@ -1,4 +1,4 @@
-package model.draw;
+package draw;
 
 import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Pane;

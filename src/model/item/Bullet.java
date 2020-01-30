@@ -1,10 +1,9 @@
 package model.item;
 
-import model.draw.*;
+import draw.Movable;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import model.draw.Sprite;
 
 /*
  * Bullet class

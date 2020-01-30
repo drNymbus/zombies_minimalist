@@ -1,6 +1,6 @@
 package model.item;
 
-import model.draw.Movable;
+import draw.Movable;
 import model.util.*;
 import game.*;
 

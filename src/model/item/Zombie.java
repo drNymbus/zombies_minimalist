@@ -1,10 +1,9 @@
 package model.item;
 
-import model.draw.*;
+import draw.Movable;
 import model.util.*;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 
 /*

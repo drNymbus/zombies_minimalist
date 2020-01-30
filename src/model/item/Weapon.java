@@ -1,10 +1,9 @@
 package model.item;
 
-import model.draw.*;
+import draw.Sprite;
 import model.util.*;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 /*
  * Weapon item (extends Sprite)
@@ -58,6 +57,9 @@ public class Weapon extends Sprite {
 
         this.magazine = weapon.getMagazine();
         this.actual_mag = this.magazine;
+
+        this.ammo = weapon.getAmmoMax();
+        this.actual_ammo = this.ammo / 2 - ((int) this.ammo/10);
 
         this.blueprint = new Bullet(layer, weapon.getBulletColor(), x, y, weapon.getBulletWidth(), weapon.getBulletHeight(),
                                     owner, weapon.getDamage(), weapon.getVelocity(), weapon.getRange());

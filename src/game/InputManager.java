@@ -10,6 +10,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 
+import java.awt.Robot;
 
 public class InputManager {
 	private int mouse_x, mouse_y;
@@ -75,6 +76,21 @@ public class InputManager {
 			mouse = e;
 		}
 	};
+
+	public void setMousePos(int x, int y) {
+		try {
+			x += this.scene.getX();
+			y += this.scene.getY();
+			System.out.println("setMousePos(" + x + "," + y + ")");
+			new Robot().mouseMove(x, y);
+		} catch (Exception e) {
+			System.out.println("setMousePos(" + x + "," + y + ")");
+		}
+
+		// r.mouseMove(x, y);
+	}
+	public void setMouseX(int x) { this.setMousePos(x, this.getMouseY()); }
+	public void setMouseY(int y) { this.setMousePos(this.getMouseX(), y); }
 
 	public int getMouseX() { return this.mouse_x; }
 	public int getMouseY() { return this.mouse_y; }

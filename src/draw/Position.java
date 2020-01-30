@@ -1,4 +1,4 @@
-package model.draw;
+package draw;
 
 public class Position {
 	private double x;

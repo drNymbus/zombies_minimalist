@@ -45,5 +45,10 @@ public class Settings {
 
     public static final KeyCode USE = KeyCode.E;
 
-
+    public static final int SCROLL_SPEED = 1;
+    public static final boolean MOUSE_CAM = true;
+    public static final KeyCode CAM_UP = KeyCode.UP;
+    public static final KeyCode CAM_DOWN = KeyCode.DOWN;
+    public static final KeyCode CAM_RIGHT = KeyCode.RIGHT;
+    public static final KeyCode CAM_LEFT = KeyCode.LEFT;
 }

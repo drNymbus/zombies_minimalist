@@ -6,10 +6,10 @@ import javafx.scene.paint.Color;
  * Enum to init Weapon class
  */
 public enum WeaponType {
-    // WEAPON_NAME (id, name, dmg, fire_rate, reload_time, velocity, range, magazine, color, width, height, b_color, b_width, b_height)
+    // WEAPON_NAME (id, name, dmg, fire_rate, reload_time, velocity, range, magazine, ammo_max, color, width, height, b_color, b_width, b_height)
     // FISTS (2, "FISTS", 5, 20, 1, -1, )
-    M4A1 (0, "M4A1", 15, 60, 50, 20, 1000, 30, Color.BLACK, 7, 10, Color.ORANGE, 3, 5),
-    GLOCK (1, "Glock 17", 55, 40, 30, 18, 500, 20, Color.BLACK, 5, 7, Color.ORANGE, 2, 5);
+    M4A1 (0, "M4A1", 15, 60, 50, 20, 1000, 30, 300, Color.BLACK, 7, 10, Color.ORANGE, 3, 5),
+    GLOCK (1, "Glock 17", 55, 40, 30, 18, 500, 20, 200, Color.BLACK, 5, 7, Color.ORANGE, 2, 5);
 
     private int id;
     private String name;
@@ -20,6 +20,7 @@ public enum WeaponType {
     private double velocity;
     private int range;
     private int magazine;
+    private int ammo;
 
     private Color color;
     private int width, height;
@@ -27,9 +28,9 @@ public enum WeaponType {
     private Color bullet_color;
     private int bullet_width, bullet_height;
 
-    WeaponType(int id, String name, int dmg, int fire_rate, int reload_time, double vel, int range, int mag, Color c, int w, int h, Color bc, int bw, int bh) {
+    WeaponType(int id, String name, int dmg, int fire_rate, int reload_time, double vel, int range, int mag, int ammo, Color c, int w, int h, Color bc, int bw, int bh) {
         this.id = id; this.name = name;
-        this.dmg = dmg; this.magazine = mag;
+        this.dmg = dmg; this.magazine = mag; this.ammo = ammo;
         this.fire_rate = fire_rate; this.reload_time = reload_time;
         this.velocity = vel; this.range = range;
         this.color = c; this.width = w; this.height = h;
@@ -40,6 +41,7 @@ public enum WeaponType {
     public String getName() { return this.name; }
     public int getDamage() { return this.dmg; }
     public int getMagazine() { return this.magazine; }
+    public int getAmmoMax() { return this.ammo; }
 
     public int getFireRate() { return this.fire_rate; }
     public int getReloadTime() { return this.reload_time; }

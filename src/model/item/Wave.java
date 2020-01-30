@@ -1,6 +1,6 @@
 package model.item;
 
-import model.draw.*;
+import draw.Position;
 import model.util.*;
 
 import java.util.Random;

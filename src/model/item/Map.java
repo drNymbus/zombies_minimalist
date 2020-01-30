@@ -1,16 +1,17 @@
 package model.item;
 
+import draw.Position;
+import draw.Sprite;
 import game.*;
-import model.draw.*;
 
 import java.util.ArrayList;
 
 import javafx.application.Platform;
-import javafx.scene.Group;
-
+import javafx.scene.PerspectiveCamera;
 
 public class Map {
-    private Group root;
+    private PerspectiveCamera camera;
+
     private boolean pause;
     private String filename;
     private String state;
@@ -29,7 +30,8 @@ public class Map {
     private Human[] humans; // Human player => humans[player_id]
 
     // loading on a default map (hardcoded)
-    public Map(int w, int h, Sprite[] bg, Prop[] props, Human[] players, int id, int difficulty) {
+    public Map(PerspectiveCamera cam, int w, int h, Sprite[] bg, Prop[] props, Human[] players, int id, int difficulty) {
+        this.camera = cam;
         this.pause = false;
         this.filename = "NONE";
         this.state = "NONE";
@@ -68,6 +70,11 @@ public class Map {
 
     // TBD
     public void loadMap() {}
+
+    public void moveCamera(double x, double y) {
+        this.camera.setTranslateX(x);
+        this.camera.setTranslateZ(y);
+    }
 
     public Human getPlayer() { return this.humans[this.player_id]; }
 
@@ -117,13 +124,29 @@ public class Map {
             h.getWeapon().reload();
         }
 
+        double cx = 0, cy = 0;
+        if (in.getMouseX() <= 0) {
+            cx = -1 * Settings.SCROLL_SPEED;
+            in.setMouseX(0);
+        } else if (in.getMouseX() >= Settings.SCENE_WIDTH-1) {
+            cx = 1 * Settings.SCROLL_SPEED;
+            in.setMouseX(Settings.SCENE_WIDTH - 1);
+        }
+
+        if (in.getMouseY() <= 0) {
+            cy = -1 * Settings.SCROLL_SPEED;
+            in.setMouseY(0);
+        } else if (in.getMouseY() >= Settings.SCENE_HEIGHT-1) {
+            cy = 1 * Settings.SCROLL_SPEED;
+            in.setMouseY(Settings.SCENE_HEIGHT - 1);
+        }
+        this.moveCamera(cx, cy);
+
     }
 
     public void update() {
         for (Human h : this.humans) {
             if (h != null) {
-                // h.move();
-                // System.out.println(h.directionX() + "," + h.directionY() + " | " + h.getX() + "," + h.getY());
                 Position new_pos = h.getNewPos();
                 Sprite tmp = new Sprite(h.getLayer(), h.getColor(), new_pos.getX(), new_pos.getY(), h.getWidth(), h.getHeight());
                 tmp.removeFromLayer();
@@ -150,20 +173,25 @@ public class Map {
 
                 }
                 h.getWeapon().update();
-                // System.out.println(h.getPosition().toString());
-                // h.rotateHuman(h.getAngle() + 1);
-                // System.out.println(h.getAngle());
             }
         }
 
+        /* BULLET UPDATE */
         for (int i=0; i < this.bullets.size(); i++) {
             Bullet b = this.bullets.get(i);
             b.move();
-            System.out.println(b.directionX() + "," + b.directionY());
             Position pos = b.getPosition();
             if ((pos.getX() < 0 || pos.getX() > this.width) && (pos.getY() < 0 || pos.getY() > this.height)) {
                 b.removeFromLayer();
                 this.bullets.remove(i);
+            }
+
+            for (int pi=0; pi < this.props.length; pi++) {
+                Prop p = this.props[pi];
+                if (b.isIn(p)) {
+                    b.removeFromLayer();
+                    this.bullets.remove(pi);
+                }
             }
         }
     }

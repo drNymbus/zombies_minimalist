@@ -1,4 +1,4 @@
-package model.draw;
+package draw;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;

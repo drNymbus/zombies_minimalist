@@ -1,6 +1,8 @@
 package game;
 
-import model.draw.*;
+// import draw.Position;
+// import draw.Sprite;
+import draw.*;
 import model.item.*;
 import model.util.*;
 
@@ -14,9 +16,12 @@ import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.PerspectiveCamera;
 
 import javafx.scene.text.Text;
+// import javafx.scene.control.Label;
 import javafx.scene.text.Font;
+
 
 import javafx.scene.paint.Color;
 
@@ -33,8 +38,8 @@ public class Game extends Application {
 	private int turn;
     private Map map;
 	private InputManager input;
-
-	private ArrayList<Text> texts = new ArrayList<>();
+	private ArrayList<TextCustom> texts = new ArrayList<TextCustom>();
+	// private ArrayList<Label> labels = new ArrayList<Label>();
 	// private VBox tmp;
 	// private VBox
 
@@ -74,24 +79,25 @@ public class Game extends Application {
 	public void initHUD() {
 		Human h = this.map.getPlayer();
 		Font font = new Font("../../assets/font/SF-Pro-Display-Regular.ttf", 20);
+		TextCustom text;
 
-		Text text = new Text("" + h.getLifePoints() + "/" + h.getMaxLifePoints());
-		text.setFont(font);
-		text.setX(0); text.setY(Settings.SCENE_HEIGHT - 20);
+		// LPs
+		text = new TextCustom("" + h.getLifePoints() + "/" + h.getMaxLifePoints(), font);
+		text.setPosition(0, Settings.SCENE_HEIGHT - text.getHeight());
 		this.texts.add(text);
-		this.layer.getChildren().add(text);
+		this.layer.getChildren().add(text.getText());
 
-		text = new Text("" + h.getWeapon().getMag() + "/" + h.getWeapon().getMaxMag());
-		text.setFont(font);
-		text.setX(Settings.SCENE_WIDTH/2); text.setY(Settings.SCENE_HEIGHT - 20);
+		// Current Ammo
+		text = new TextCustom("" + h.getWeapon().getMag() + "/" + h.getWeapon().getMaxMag(), font);
+		text.setPosition(Settings.SCENE_WIDTH - text.getWidth()*2.5, Settings.SCENE_HEIGHT - text.getHeight());
 		this.texts.add(text);
-		this.layer.getChildren().add(text);
+		this.layer.getChildren().add(text.getText());
 
-		text = new Text("" + h.getWeapon().getAmmo());
-		text.setFont(font);
-		text.setX(Settings.SCENE_WIDTH/2 + this.texts.get(1).getWrappingWidth()); text.setY(Settings.SCENE_HEIGHT - 20);
+		// Ammo
+		text = new TextCustom("" + h.getWeapon().getAmmo(), font);
+		text.setPosition(Settings.SCENE_WIDTH - text.getWidth()*2.5, Settings.SCENE_HEIGHT - this.texts.get(1).getHeight() - text.getHeight());
 		this.texts.add(text);
-		this.layer.getChildren().add(text);
+		this.layer.getChildren().add(text.getText());
 
 	}
 
@@ -103,6 +109,11 @@ public class Game extends Application {
 	}
 
     public void loadGame() {
+		PerspectiveCamera cam = new PerspectiveCamera(false);
+		// cam.setTranslateX(-20);
+        // cam.setTranslateY(0);
+        // cam.setTranslateZ(-50);
+		scene.setCamera(cam);
 		Position map_size = new Position(Settings.SCENE_WIDTH*2, Settings.SCENE_HEIGHT*2);
 
 		layer.setPrefSize(map_size.getX(), map_size.getY());
@@ -115,9 +126,9 @@ public class Game extends Application {
 
 		Sprite[] bg = new Sprite[4];
 		bg[0] = new Sprite(this.layer, Settings.COLOR_DIRT, 0, 0, Settings.SCENE_WIDTH/2, Settings.SCENE_HEIGHT/2);
-		bg[1] = new Sprite(this.layer, Settings.COLOR_GRASS, Settings.SCENE_WIDTH/2, 0, Settings.SCENE_WIDTH/2, Settings.SCENE_HEIGHT/2);
-		bg[2] = new Sprite(this.layer, Settings.COLOR_CEMENT, 0, Settings.SCENE_HEIGHT/2, Settings.SCENE_WIDTH/2, Settings.SCENE_HEIGHT/2);
-		bg[3] = new Sprite(this.layer, Settings.COLOR_DIRT, Settings.SCENE_WIDTH/2, Settings.SCENE_HEIGHT/2, Settings.SCENE_WIDTH/2, Settings.SCENE_HEIGHT/2);
+		bg[1] = new Sprite(this.layer, Settings.COLOR_GRASS, (Settings.SCENE_WIDTH-1)/2, 0, Settings.SCENE_WIDTH/2, Settings.SCENE_HEIGHT/2);
+		bg[2] = new Sprite(this.layer, Settings.COLOR_CEMENT, 0, (Settings.SCENE_HEIGHT-1)/2, Settings.SCENE_WIDTH/2, Settings.SCENE_HEIGHT/2);
+		bg[3] = new Sprite(this.layer, Settings.COLOR_DIRT, (Settings.SCENE_WIDTH-1)/2, Settings.SCENE_HEIGHT/2, Settings.SCENE_WIDTH/2, Settings.SCENE_HEIGHT/2);
 
 		Prop[] props = new Prop[3];
 		props[0] = new Prop(this.layer, 120, 200, 0, PropType.NONE);
@@ -135,7 +146,7 @@ public class Game extends Application {
 		// players[3] = new Human(Settings.ID_HUMAN3, layer, Settings.COLOR_HUMAN3, 200, 200, 100, 1, wp);
 
 
-		this.map = new Map(Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, bg, props, players, Settings.ID_HUMAN0, 0);
+		this.map = new Map(cam, Settings.SCENE_WIDTH, Settings.SCENE_HEIGHT, bg, props, players, Settings.ID_HUMAN0, 0);
     }
 
 	public static void main(String[] args) {
